@@ -1,46 +1,6 @@
 #!/usr/bin/env python2
 import unittest
 
-class Offers:
-    OfferList = {}
-
-    def addOfferPercent(self, name, value):
-        self.OfferList[name] = { "%": value }
-
-    def addOfferValue(self, name, value):
-        self.OfferList[name] = { "val": value }
-
-    def addOfferAmount(self, name, amount, accounted):
-        self.OfferList[name] = (amount, accounted)
-
-    def getOffer(self, name):
-        return self.OfferList[name]
-
-class Products:
-
-    ProductList = {}
-
-    def __init__(self, offers):
-        self.offers = offers
-
-
-    def addProduct(self, name, price, offer_name):
-        self.ProductList[name] = (price, offer_name)
-
-    def getPrice(self, name, quantity):
-         price, offer = self.ProductList[name]
-         tmp = self.offers.getOffer(offer)
-         if isinstance(tmp, tuple):
-             amount, accounted = tmp
-             if quantity % amount == 0:
-                 return quantity/amount * price * accounted
-         else:
-             if tmp[1] == "val":
-                 return (price - tmp[2]) * quantity
-
-             else:
-                 return price * (1 - tmp[2]) * quantity
-
 class TPV_impl:
     products = {}
     plist = {}
@@ -77,11 +37,6 @@ class TPV_impl:
 class TPV (unittest.TestCase):
     def setUp (self):
         self.impl=TPV_impl()
-#        self.impl.products = {
-#                "A": {"price":2.30, "discount":0.10},
-#                "B": {"price":1.60},
-#		"C": {"price":3.60}
-#		}
 
         self.offers = Offers()
         self.products = Products(self.offers)
