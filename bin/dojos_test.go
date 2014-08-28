@@ -9,33 +9,32 @@ import (
 
 func TestInit(t *testing.T) {
 	var args []string
-	var DirName string
-	getSessionName = func(args []string) string {
+	var dir string
+	GetSessName = func(args []string) string {
 		if len(args) > 0 {
 			return args[0]
-		} else {
-			return "20140827"
 		}
+		return "20140827"
 	}
-	getDirectory = func() (string, error) { return "/tmp", nil }
-	makeDirectory = func(name string, perm os.FileMode) error {
-		DirName = name
+	GetCurDir = func() (string, error) { return "/tmp", nil }
+	MkDir = func(name string, perm os.FileMode) error {
+		dir = name
 		return nil
 	}
 	Convey("Given no entry", t, func() {
 		Convey("When InitAction is called", func() {
-			initAction(args)
+			InitAction(args)
 			Convey("Directory with current date is created", func() {
-				So(DirName, ShouldEqual, "/tmp/20140827")
+				So(dir, ShouldEqual, "/tmp/20140827")
 			})
 		})
 	})
 	Convey("Given an entry", t, func() {
 		args = []string{"session"}
 		Convey("When InitAction is called", func() {
-			initAction(args)
+			InitAction(args)
 			Convey("Directory with current date is created", func() {
-				So(DirName, ShouldEqual, "/tmp/session")
+				So(dir, ShouldEqual, "/tmp/session")
 			})
 		})
 	})

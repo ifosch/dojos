@@ -10,49 +10,50 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var getSessionName = func(args []string) string {
-	const defaultSessionName = "20060102"
-	SessionName := time.Now().Format(defaultSessionName)
+var GetSessName = func(args []string) string {
+	const defaultSessName = "20060102"
+	sessName := time.Now().Format(defaultSessName)
 	if len(args) > 0 {
-		SessionName = args[0]
+		sessName = args[0]
 	}
-	return SessionName
+	return sessName
 }
 
-var getDirectory = func() (string, error) {
+var GetCurDir = func() (string, error) {
 	return os.Getwd()
 }
 
-var makeDirectory = func(name string, perm os.FileMode) error {
+var MkDir = func(name string, perm os.FileMode) error {
 	return os.Mkdir(name, perm)
 }
 
-func initAction(args []string) {
-	sessionName := getSessionName(args)
-	cwd, err := getDirectory()
+func InitAction(args []string) {
+	sessionName := GetSessName(args)
+	cwd, err := GetCurDir()
 	if err != nil {
 		log.Fatal(err)
-	} else {
-		dir := path.Join(cwd, sessionName)
-		fmt.Println("Init: " + dir)
-		makeDirectory(dir, 0777)
+		return
 	}
+	dir := path.Join(cwd, sessionName)
+	// TODO : Use a debug message for this. Or a way to filter with quiet and verbose flags.
+	fmt.Println("Init: " + dir)
+	MkDir(dir, 0777)
 }
 
-var DojosCmd = &cobra.Command{
+var initCmd = &cobra.Command{
+	Use:   "init [session name]",
+	Short: "Initializes a directory for the dojo session, using current date or specified name.",
+	Run: func(cmd *cobra.Command, args []string) {
+		InitAction(args)
+	},
+}
+
+var dojosCmd = &cobra.Command{
 	Use:   "dojos",
 	Short: "Dojos is a tool to manipulate dojo sessions",
 }
 
-var InitCmd = &cobra.Command{
-	Use:   "init [session name]",
-	Short: "Initializes a directory for the dojo session, using current date or specified name.",
-	Run: func(cmd *cobra.Command, args []string) {
-		initAction(args)
-	},
-}
-
 func main() {
-	DojosCmd.AddCommand(InitCmd)
-	DojosCmd.Execute()
+	dojosCmd.AddCommand(initCmd)
+	dojosCmd.Execute()
 }
