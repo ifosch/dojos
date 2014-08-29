@@ -3,33 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"path"
-	"time"
 
 	"github.com/spf13/cobra"
+
+	"./dojos"
 )
 
-var GetSessName = func(args []string) string {
-	const defaultSessName = "20060102"
-	sessName := time.Now().Format(defaultSessName)
-	if len(args) > 0 {
-		sessName = args[0]
-	}
-	return sessName
-}
-
-var GetCurDir = func() (string, error) {
-	return os.Getwd()
-}
-
-var MkDir = func(name string, perm os.FileMode) error {
-	return os.Mkdir(name, perm)
-}
-
 func InitAction(args []string) {
-	sessionName := GetSessName(args)
-	cwd, err := GetCurDir()
+	const pythonTestContent = "import unittest\nclass Test1(unittest.TestCase):\n  pass\n\nif __name__ == \"__main__\":\n  unittest.main()"
+	sessionName := dojos.GetSessName(args)
+	cwd, err := dojos.GetCurDir()
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -37,7 +21,8 @@ func InitAction(args []string) {
 	dir := path.Join(cwd, sessionName)
 	// TODO : Use a debug message for this. Or a way to filter with quiet and verbose flags.
 	fmt.Println("Init: " + dir)
-	MkDir(dir, 0777)
+	dojos.MkDir(dir, 0777)
+	dojos.WriteFile(path.Join(dir, "tests.py"), pythonTestContent)
 }
 
 var initCmd = &cobra.Command{
