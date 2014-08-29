@@ -10,9 +10,34 @@ import (
 	"./dojos"
 )
 
+const defaultSessName = "20060102"
+
+func WriteFile(name, content string) (int, error) {
+	f, err := dojos.Create(name)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	w := dojos.NewWriter(f)
+	bytes, err := w.WriteString(content)
+	if err != nil {
+		return bytes, err
+	}
+	w.Flush()
+	return bytes, nil
+}
+
+func GetSessName(args []string) string {
+	sessName := dojos.Now(defaultSessName)
+	if len(args) > 0 {
+		sessName = args[0]
+	}
+	return sessName
+}
+
 func InitAction(args []string) {
 	const pythonTestContent = "import unittest\nclass Test1(unittest.TestCase):\n  pass\n\nif __name__ == \"__main__\":\n  unittest.main()"
-	sessionName := dojos.GetSessName(args)
+	sessionName := GetSessName(args)
 	cwd, err := dojos.GetCurDir()
 	if err != nil {
 		log.Fatal(err)
@@ -22,7 +47,7 @@ func InitAction(args []string) {
 	// TODO : Use a debug message for this. Or a way to filter with quiet and verbose flags.
 	fmt.Println("Init: " + dir)
 	dojos.MkDir(dir, 0777)
-	dojos.WriteFile(path.Join(dir, "tests.py"), pythonTestContent)
+	WriteFile(path.Join(dir, "tests.py"), pythonTestContent)
 }
 
 var initCmd = &cobra.Command{

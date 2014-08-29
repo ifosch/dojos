@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -15,7 +16,7 @@ func TestInit(t *testing.T) {
 	var dir string
 	var test_filename string
 	var test_content string
-	dojos.GetSessName = func(args []string) string {
+	dojos.Now = func(format string) string {
 		if len(args) > 0 {
 			return args[0]
 		}
@@ -26,8 +27,11 @@ func TestInit(t *testing.T) {
 		dir = name
 		return nil
 	}
-	dojos.WriteFile = func(name, content string) (int, error) {
+	dojos.Create = func(name string) (*os.File, error) {
 		test_filename = name
+		return ioutil.TempFile("", "test-dojo1")
+	}
+	dojos.WriteString = func(content string, b *dojos.Writer) (int, error) {
 		test_content = content
 		return len(content), nil
 	}
