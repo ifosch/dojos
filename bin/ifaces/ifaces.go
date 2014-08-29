@@ -4,14 +4,9 @@ import (
 	"bufio"
 	"io"
 	"os"
-	"time"
 )
 
 const defaultBufSize = 4096
-
-var Now = func(format string) string {
-	return time.Now().Format(format)
-}
 
 var GetCurDir = func() (string, error) {
 	return os.Getwd()

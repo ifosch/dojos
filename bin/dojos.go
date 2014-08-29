@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"./ifaces"
+	"./ifaces/itime"
 )
 
 const defaultSessName = "20060102"
@@ -28,7 +29,7 @@ func WriteFile(name, content string) (int, error) {
 }
 
 func GetSessName(args []string) string {
-	sessName := ifaces.Now(defaultSessName)
+	sessName := itime.Now(defaultSessName)
 	if len(args) > 0 {
 		sessName = args[0]
 	}

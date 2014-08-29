@@ -8,6 +8,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"./ifaces"
+	"./ifaces/itime"
 )
 
 func TestInit(t *testing.T) {
@@ -16,7 +17,7 @@ func TestInit(t *testing.T) {
 	var dir string
 	var test_filename string
 	var test_content string
-	ifaces.Now = func(format string) string {
+	itime.Now = func(format string) string {
 		if len(args) > 0 {
 			return args[0]
 		}
