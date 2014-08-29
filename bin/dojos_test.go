@@ -7,7 +7,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"./ifaces"
+	"./ifaces/ibufio"
 	"./ifaces/ios"
 	"./ifaces/itime"
 )
@@ -33,7 +33,7 @@ func TestInit(t *testing.T) {
 		test_filename = name
 		return ioutil.TempFile("", "test-dojo1")
 	}
-	ifaces.WriteString = func(content string, b *ifaces.Writer) (int, error) {
+	ibufio.WriteString = func(content string, b *ibufio.Writer) (int, error) {
 		test_content = content
 		return len(content), nil
 	}

@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"./ifaces"
+	"./ifaces/ibufio"
 	"./ifaces/ios"
 	"./ifaces/itime"
 )
@@ -20,7 +20,7 @@ func WriteFile(name, content string) (int, error) {
 		return 0, err
 	}
 	defer f.Close()
-	w := ifaces.NewWriter(f)
+	w := ibufio.NewWriter(f)
 	bytes, err := w.WriteString(content)
 	if err != nil {
 		return bytes, err

@@ -1,4 +1,4 @@
-package ifaces
+package ibufio
 
 import (
 	"bufio"
