@@ -7,18 +7,18 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"./dojos"
+	"./ifaces"
 )
 
 const defaultSessName = "20060102"
 
 func WriteFile(name, content string) (int, error) {
-	f, err := dojos.Create(name)
+	f, err := ifaces.Create(name)
 	if err != nil {
 		return 0, err
 	}
 	defer f.Close()
-	w := dojos.NewWriter(f)
+	w := ifaces.NewWriter(f)
 	bytes, err := w.WriteString(content)
 	if err != nil {
 		return bytes, err
@@ -28,7 +28,7 @@ func WriteFile(name, content string) (int, error) {
 }
 
 func GetSessName(args []string) string {
-	sessName := dojos.Now(defaultSessName)
+	sessName := ifaces.Now(defaultSessName)
 	if len(args) > 0 {
 		sessName = args[0]
 	}
@@ -38,7 +38,7 @@ func GetSessName(args []string) string {
 func InitAction(args []string) {
 	const pythonTestContent = "import unittest\nclass Test1(unittest.TestCase):\n  pass\n\nif __name__ == \"__main__\":\n  unittest.main()"
 	sessionName := GetSessName(args)
-	cwd, err := dojos.GetCurDir()
+	cwd, err := ifaces.GetCurDir()
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -46,7 +46,7 @@ func InitAction(args []string) {
 	dir := path.Join(cwd, sessionName)
 	// TODO : Use a debug message for this. Or a way to filter with quiet and verbose flags.
 	fmt.Println("Init: " + dir)
-	dojos.MkDir(dir, 0777)
+	ifaces.MkDir(dir, 0777)
 	WriteFile(path.Join(dir, "tests.py"), pythonTestContent)
 }
 

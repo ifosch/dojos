@@ -7,7 +7,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"./dojos"
+	"./ifaces"
 )
 
 func TestInit(t *testing.T) {
@@ -16,22 +16,22 @@ func TestInit(t *testing.T) {
 	var dir string
 	var test_filename string
 	var test_content string
-	dojos.Now = func(format string) string {
+	ifaces.Now = func(format string) string {
 		if len(args) > 0 {
 			return args[0]
 		}
 		return "20140827"
 	}
-	dojos.GetCurDir = func() (string, error) { return "/tmp", nil }
-	dojos.MkDir = func(name string, perm os.FileMode) error {
+	ifaces.GetCurDir = func() (string, error) { return "/tmp", nil }
+	ifaces.MkDir = func(name string, perm os.FileMode) error {
 		dir = name
 		return nil
 	}
-	dojos.Create = func(name string) (*os.File, error) {
+	ifaces.Create = func(name string) (*os.File, error) {
 		test_filename = name
 		return ioutil.TempFile("", "test-dojo1")
 	}
-	dojos.WriteString = func(content string, b *dojos.Writer) (int, error) {
+	ifaces.WriteString = func(content string, b *ifaces.Writer) (int, error) {
 		test_content = content
 		return len(content), nil
 	}

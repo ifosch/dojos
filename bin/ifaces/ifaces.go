@@ -1,4 +1,4 @@
-package dojos
+package ifaces
 
 import (
 	"bufio"
