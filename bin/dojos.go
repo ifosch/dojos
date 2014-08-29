@@ -8,13 +8,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"./ifaces"
+	"./ifaces/ios"
 	"./ifaces/itime"
 )
 
 const defaultSessName = "20060102"
 
 func WriteFile(name, content string) (int, error) {
-	f, err := ifaces.Create(name)
+	f, err := ios.Create(name)
 	if err != nil {
 		return 0, err
 	}
@@ -39,7 +40,7 @@ func GetSessName(args []string) string {
 func InitAction(args []string) {
 	const pythonTestContent = "import unittest\nclass Test1(unittest.TestCase):\n  pass\n\nif __name__ == \"__main__\":\n  unittest.main()"
 	sessionName := GetSessName(args)
-	cwd, err := ifaces.GetCurDir()
+	cwd, err := ios.Getwd()
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -47,7 +48,7 @@ func InitAction(args []string) {
 	dir := path.Join(cwd, sessionName)
 	// TODO : Use a debug message for this. Or a way to filter with quiet and verbose flags.
 	fmt.Println("Init: " + dir)
-	ifaces.MkDir(dir, 0777)
+	ios.Mkdir(dir, 0777)
 	WriteFile(path.Join(dir, "tests.py"), pythonTestContent)
 }
 

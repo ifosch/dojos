@@ -8,6 +8,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"./ifaces"
+	"./ifaces/ios"
 	"./ifaces/itime"
 )
 
@@ -23,12 +24,12 @@ func TestInit(t *testing.T) {
 		}
 		return "20140827"
 	}
-	ifaces.GetCurDir = func() (string, error) { return "/tmp", nil }
-	ifaces.MkDir = func(name string, perm os.FileMode) error {
+	ios.Getwd = func() (string, error) { return "/tmp", nil }
+	ios.Mkdir = func(name string, perm os.FileMode) error {
 		dir = name
 		return nil
 	}
-	ifaces.Create = func(name string) (*os.File, error) {
+	ios.Create = func(name string) (*os.File, error) {
 		test_filename = name
 		return ioutil.TempFile("", "test-dojo1")
 	}
